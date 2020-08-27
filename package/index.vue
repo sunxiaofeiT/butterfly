@@ -1,6 +1,8 @@
 <template>
   <div>
-    <draggable-container @click="onclick" @drag="ondrag"></draggable-container>
+    <draggable-container @click="onclick" @drag="ondrag">
+      <div class="icon"></div>
+    </draggable-container>
   </div>
 </template>
 
@@ -26,17 +28,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@icon-size: 40px;
-
-.de-fixed-container {
-  position: fixed;
-  width: @icon-size;
-  height: @icon-size;
+.icon {
+  width: 40px;
+  height: 40px;
   border-radius: 4px;
   background: #409eff;
-}
-.de-fixed-container,
-.de-content-container {
-  position: fixed;
 }
 </style>

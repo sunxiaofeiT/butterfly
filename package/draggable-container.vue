@@ -1,6 +1,6 @@
 <template>
-  <div ref="ele" class="de-fixed-container" :style="style" @mousedown="onmousedown" @mouseup="onmouseup" @mousemove="onmousemove">
-    <slot name="fixed"></slot>
+  <div ref="ele" class="de-fixed-container" :style="style" @mousedown="onmousedown" @mouseup="onmouseup">
+    <slot></slot>
   </div>
 </template>
 
@@ -23,11 +23,9 @@ export default {
       return { left: `${this.position.x}px`, top: `${this.position.y}px` }
     },
   },
-  mounted() {
-    document.addEventListener('mousemove', this.onmousemove)
-  },
   methods: {
     onmousedown(e) {
+      document.addEventListener('mousemove', this.onmousemove)
       this.eventStatus = 'click'
       this.timer = setTimeout(() => {
         this.timer = null
@@ -37,6 +35,7 @@ export default {
       this.offset = { x: e.x - this.position.x, y: e.y - this.position.y }
     },
     onmouseup(e) {
+      document.removeEventListener('mousemove', this.onmousemove)
       let ele = this.$refs.ele
       let size = ele ? { x: ele.offsetWidth, y: ele.offsetHeight } : { x: 0, y: 0 }
       this.$emit(this.eventStatus, { position: { ...this.position }, size, event: e })
@@ -67,17 +66,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@icon-size: 40px;
-
 .de-fixed-container {
-  position: fixed;
-  width: @icon-size;
-  height: @icon-size;
-  border-radius: 4px;
-  background: #409eff;
-}
-.de-fixed-container,
-.de-content-container {
   position: fixed;
 }
 </style>
