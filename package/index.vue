@@ -1,77 +1,26 @@
 <template>
-  <div class="de-container">
-    <div class="de-fixed-container" :style="style" @mousedown="onmousedown" @mouseup="onmouseup" @mousemove="onmousemove"></div>
-    <div v-if="showContent" class="de-content-container">
-      <p>dfasffaf</p>
-    </div>
+  <div>
+    <draggable-container @click="onclick" @drag="ondrag"></draggable-container>
   </div>
 </template>
 
 <script>
+import DraggableContainer from './draggable-container.vue'
+
 export default {
   name: 'drggable-element',
-  props: {
-    distance: { type: Number, default: 80 },
-    duration: { type: Number, default: 400 },
-  },
+  components: { DraggableContainer },
   data() {
-    return {
-      showContent: false,
-      style: { left: '20px', top: '20px' },
-      eventStatus: null, // toConfirm, click, drag
-    }
+    return {}
   },
-  mounted() {
-    document.addEventListener('mousemove', this.onmousemove)
-  },
+  mounted() {},
   methods: {
-    onmousedown(e) {
-      this.eventStatus = 'toConfirm'
-      this.timer = setTimeout(() => {
-        this.timer = null
-        this.ondrag()
-      }, this.duration)
-      this.clickPosition = { x: e.x, y: e.y }
+    onclick(target) {
+      console.log('MY LOG: : onclick -> target', target)
     },
-    onmouseup() {
-      if (this.eventStatus === 'toConfirm') {
-        this.clearTimer()
-      }
-      if (this.eventStatus === 'drag') {
-        this.eventStatus = null
-      }
+    ondrag(target) {
+      console.log('MY LOG: : ondrag -> target', target)
     },
-    onmousemove(e) {
-      if (this.eventStatus === 'toConfirm') {
-        if (!this.clickPosition) return
-        let curx = e.x
-        let cury = e.y
-        if (this.clickPosition.x - curx > this.distance || this.clickPosition.y - cury > this.distance) {
-          this.clearTimer()
-          this.ondrag()
-        }
-      }
-      if (this.eventStatus === 'drag') {
-        this.style = { left: `${e.x}px`, top: `${e.y}px` }
-      }
-    },
-    onclick() {
-      this.eventStatus = 'click'
-      /**
-       * do something
-       */
-      console.info('click')
-      this.eventStatus = null
-    },
-    ondrag() {
-      this.eventStatus = 'drag'
-      console.info('drag')
-    },
-    clearTimer() {
-      if (!this.timer) return
-      clearTimeout(this.timer)
-      this.timer = null
-    }
   },
 }
 </script>
