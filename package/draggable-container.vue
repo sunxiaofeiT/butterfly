@@ -13,14 +13,17 @@ export default {
     storeLocation: { type: Boolean, default: true },
     paddingSpace: { type: Number, default: 10 },
     adsorbDistance: { type: Number, default: 10 },
+    defaultPosition: { type: Object, default: () => ({ x: 20, y: 20 }) },
   },
   data() {
     let localx = this.storeLocation ? localStorage.getItem('draggable-element-x') : null
     let localy = this.storeLocation ? localStorage.getItem('draggable-element-y') : null
+    if (localx === null || localx === undefined) localx = this.defaultPosition.x
+    if (localy === null || localy === undefined) localy = this.defaultPosition.y
     return {
       size: { x: 0, y: 0 },
       offset: { x: 0, y: 0 }, // offset to the draggable-element
-      position: { x: localx || 20, y: localy || 20 }, // draggable-element's position, x -> left, y -> top
+      position: { x: localx, y: localy }, // draggable-element's position, x -> left, y -> top
       eventStatus: null, // enums: toConfirm, click, drag
       deviceSize: { height: window.innerHeight, width: window.innerWidth },
     }
@@ -91,7 +94,11 @@ export default {
       if (y > this.deviceSize.height - this.size.y - adsorbDistance) {
         y = this.deviceSize.height - this.size.y + paddingSpace
       }
-      if (x !== tempx || y !== tempy) this.onmouseup(e)
+      if (x !== tempx || y !== tempy) {
+        this.onmouseup(e)
+        localStorage.setItem('draggable-element-x', x)
+        localStorage.setItem('draggable-element-y', y)
+      }
       return { x, y }
     },
   },
